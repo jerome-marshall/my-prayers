@@ -1,0 +1,27 @@
+{
+  "version": "6",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1719564575975,
+      "tag": "0000_brief_nuke",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1719566706700,
+      "tag": "0001_parched_living_mummy",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1719576509973,
+      "tag": "0002_empty_lockjaw",
+      "breakpoints": true
+    }
+  ]
+}
