@@ -19,7 +19,8 @@ export const users = createTable("user", {
     .primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
   email: varchar("email", { length: 256 }).unique().notNull(),
-  hashedPassword: text("hashed_password").notNull(),
+  hashedPassword: text("hashed_password"),
+  picture: text("picture"),
   role: text("role", { enum: ["user", "admin"] }).notNull(),
 });
 

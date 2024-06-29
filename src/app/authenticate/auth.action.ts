@@ -8,6 +8,10 @@ import { Argon2id } from "oslo/password";
 import { type SignUpFormValues } from "./SignUpForm";
 import { type SignInFormValues } from "./SignInForm";
 import { redirect } from "next/navigation";
+import { env } from "@/env";
+import { generateState } from "arctic";
+import { generateCodeVerifier } from "oslo/oauth2";
+import { googleOAuthClient } from "@/lib/googleOAuth";
 
 export const signUp = async (values: SignUpFormValues) => {
   try {
@@ -101,4 +105,31 @@ export const logOut = async () => {
   );
 
   return redirect("/authenticate");
+};
+
+export const getGoogleOauthConsentUrl = async () => {
+  try {
+    const state = generateState();
+    const codeVerifier = generateCodeVerifier();
+
+    cookies().set("codeVerifier", codeVerifier, {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+    });
+    cookies().set("state", state, {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+    });
+
+    const authUrl = await googleOAuthClient.createAuthorizationURL(
+      state,
+      codeVerifier,
+      {
+        scopes: ["email", "profile"],
+      },
+    );
+    return { success: true, url: authUrl.toString() };
+  } catch (error) {
+    return { success: false, error: "Something went wrong" };
+  }
 };
