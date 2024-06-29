@@ -28,6 +28,7 @@ export const getUser = async () => {
   if (!sessionId) {
     return null;
   }
+
   const { session, user } = await lucia.validateSession(sessionId);
   try {
     if (session?.fresh) {
@@ -48,15 +49,18 @@ export const getUser = async () => {
       );
     }
   } catch (error) {}
-  // const dbUser = await prisma.user.findUnique({
-  //   where: {
-  //     id: user?.id,
-  //   },
-  //   select: {
-  //     name: true,
-  //     email: true,
-  //     picture: true,
-  //   },
-  // });
-  // return dbUser;
+
+  if (!user) {
+    return null;
+  }
+
+  const dbUser = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.id, user?.id),
+    columns: {
+      name: true,
+      email: true,
+      role: true,
+    },
+  });
+  return dbUser;
 };
